@@ -8,15 +8,45 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
 import { ReqUser } from 'src/interface/request';
-import { Public, SetRoles } from './auth.metadata';
+import { Public } from './auth.metadata';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login';
+import { RegisterDto } from './dto/register';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  /**
+   *  User registration
+   */
+  @Public()
+  @Post('register')
+  @ApiOkResponse({
+    description: 'User registered successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        user: {
+          type: 'object',
+          properties: {
+            userId: { type: 'number' },
+            name: { type: 'string' },
+            email: { type: 'string' },
+          },
+        },
+        access_token: { type: 'string' },
+      },
+    },
+  })
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(
+      registerDto.name,
+      registerDto.email,
+      registerDto.password,
+    );
+  }
 
   /**
    *  User login
@@ -36,7 +66,7 @@ export class AuthController {
     },
   })
   signIn(@Body() signInDto: LoginDto) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+    return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
   /**
@@ -54,7 +84,7 @@ export class AuthController {
     },
   })
   async refreshToken(@Request() req: ReqUser) {
-    return this.authService.refresh(req.user.sub);
+    return this.authService.refresh(Number(req.user?.sub));
   }
 
   /**
@@ -62,15 +92,13 @@ export class AuthController {
    */
   @Get('me')
   @ApiBearerAuth()
-  @SetRoles(Role.ADMIN)
   @ApiOkResponse({
     description: 'User Profile',
     schema: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
-        username: { type: 'string' },
-        role: { type: 'string' },
+        userId: { type: 'number' },
+        email: { type: 'string' },
       },
     },
   })

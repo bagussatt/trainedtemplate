@@ -10,10 +10,10 @@ WORKDIR /app
 COPY server/package.json /app
 COPY server/pnpm-lock.yaml /app
 
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+RUN npm install -g pnpm && pnpm install --no-frozen-lockfile
 COPY server /app
 ENV NODE_ENV=production
-ENV DATABASE_URL="mysql://user:password@localhost:3306/database"
+ENV DATABASE_URL="postgresql://user:password@localhost:5432/mydb?schema=public"
 
 RUN pnpm run prisma:generate && pnpm build
 RUN pnpm prune --prod

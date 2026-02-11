@@ -11,14 +11,37 @@ enum Role {
   ADMIN
 }
 
+enum status {
+  PAID
+  PENDING
+}
+
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String @id @default(cuid())
+  userId       Int    @id @default(autoincrement())
   name     String
-  username String @unique
+  email    String @unique
   password String
-  role     Role   @default(USER)
+}
+
+model Customers {
+  customerId Int @id @default(autoincrement())
+  name String
+  email String
+  img_url String
+  List_Invoices Invoices[] 
+}
+model Invoices{
+  invoicesId Int @id @default(autoincrement())
+  custId Int
+  CustomerId Customers @relation(fields: [custId], references: [customerId], onDelete: Cascade, onUpdate: Cascade)
+}
+model Revenue{
+  revenueId Int @id @default(autoincrement())
+  month DateTime
+  revenue String
 }

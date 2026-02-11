@@ -6,8 +6,8 @@ import { IsString } from 'class-validator';
  */
 export class LoginDto {
   @ApiProperty()
-  @IsString({ message: 'Must be a valid username' })
-  username: string;
+  @IsString({ message: 'Must be a valid email' })
+  email: string;
 
   @ApiProperty()
   @IsString({ message: 'Must be a string' })
