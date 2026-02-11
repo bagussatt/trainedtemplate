@@ -6,13 +6,17 @@ export class PrismaService extends PrismaClient {
   logger = new Logger(PrismaService.name);
 
   constructor() {
+    const isDev = process.env.NODE_ENV !== 'production';
+
     super({
-      log: [{ emit: 'event', level: 'query' }],
+      log: isDev ? [{ emit: 'event', level: 'query' }] : [],
     });
 
-    this.$on('query' as never, (e: Prisma.QueryEvent) => {
-      this.logger.debug(`${e.duration}ms - ${e.params} - Query: ${e.query}`);
-    });
+    if (isDev) {
+      this.$on('query' as never, (e: Prisma.QueryEvent) => {
+        this.logger.debug(`${e.duration}ms - ${e.params} - Query: ${e.query}`);
+      });
+    }
   }
 
   async onModuleInit() {

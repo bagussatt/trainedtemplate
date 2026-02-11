@@ -3,6 +3,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { InvoicesModule } from './invoices/invoices.module';
 import { LoggingModule } from './logging/logging.module';
 
 @Module({
@@ -16,6 +18,8 @@ import { LoggingModule } from './logging/logging.module';
       : []),
     AuthModule,
     CommonModule,
+    DashboardModule,
+    InvoicesModule,
     LoggingModule,
   ],
   controllers: [],

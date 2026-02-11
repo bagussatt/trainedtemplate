@@ -11,7 +11,7 @@ enum Role {
   ADMIN
 }
 
-enum status {
+enum Status {
   PAID
   PENDING
 }
@@ -38,10 +38,13 @@ model Customers {
 model Invoices{
   invoicesId Int @id @default(autoincrement())
   custId Int
+  amount Int
+  status Status @default(PENDING)
+  date DateTime @default(now())
   CustomerId Customers @relation(fields: [custId], references: [customerId], onDelete: Cascade, onUpdate: Cascade)
 }
 model Revenue{
   revenueId Int @id @default(autoincrement())
   month DateTime
-  revenue String
+  revenue Int
 }
