@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsDateString, IsEnum } from 'class-validator';
+import { IsNumber, IsOptional, IsDate, IsEnum } from 'class-validator';
+import { Type } from 'class-transformer';
 import { Status } from '@prisma/client';
 
 export class CreateInvoiceDto {
@@ -11,10 +12,17 @@ export class CreateInvoiceDto {
   @IsNumber()
   amount: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date-time',
+    description: 'ISO 8601 datetime format (e.g., 2026-02-01T10:00:00Z)',
+    example: '2026-02-01T10:00:00Z'
+  })
   @IsOptional()
-  @IsDateString()
-  date?: string;
+  @Type(() => Date)
+  @IsDate()
+  date?: Date;
 
   @ApiProperty({ required: false, enum: Status })
   @IsOptional()
