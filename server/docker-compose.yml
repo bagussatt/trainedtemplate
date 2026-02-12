@@ -1,19 +1,17 @@
 services:
-
   db:
-    image: postgres:17
-    container_name: db
+    image: mariadb
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
-      - "5436:5432"
+      - 3306:3306
     volumes:
-      - ./.temp/db:/var/lib/postgresql/data
+      - ./.temp/db:/var/lib/mysql
 
   adminer:
     image: adminer
-    container_name: adminer
     ports:
       - '8080:8080'
