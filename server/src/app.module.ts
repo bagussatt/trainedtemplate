@@ -3,7 +3,10 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { InvoicesModule } from './invoices/invoices.module';
 import { LoggingModule } from './logging/logging.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -15,7 +18,12 @@ import { LoggingModule } from './logging/logging.module';
         ]
       : []),
     AuthModule,
+       ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     CommonModule,
+    DashboardModule,
+    InvoicesModule,
     LoggingModule,
   ],
   controllers: [],

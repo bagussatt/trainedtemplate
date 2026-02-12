@@ -1,15 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import { PrismaClient, Status } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 const main = async () => {
   console.log('🌱 Menyiapkan data sampel...');
 
-  // 1. Create Users with password "12345678"
+  // 1. Create Users
   console.log('👤 Menambahkan pengguna...');
-  const passwordHash = await bcrypt.hash('12345678', 10);
-
   const users = await Promise.all([
     prisma.user.upsert({
       where: { email: 'budi@santoso.com' },
@@ -17,7 +14,7 @@ const main = async () => {
       create: {
         name: 'Budi Santoso',
         email: 'budi@santoso.com',
-        password: passwordHash,
+        password: '$2b$10$abcdefghijklmnopqrstuv', // Dummy hash
       },
     }),
     prisma.user.upsert({
@@ -26,7 +23,7 @@ const main = async () => {
       create: {
         name: 'Siti Aminah',
         email: 'siti@aminah.com',
-        password: passwordHash,
+        password: '$2b$10$abcdefghijklmnopqrstuv',
       },
     }),
   ]);
@@ -188,19 +185,13 @@ Ringkasan:
   `);
 
   // Show some sample data
-  console.log('📊 Contoh Data Faktur:');
+  console.log('\n📊 Contoh Data Faktur:');
   for (const invoice of invoices.slice(0, 3)) {
     const customer = customers.find((c) => c.customerId === invoice.custId);
     console.log(
       `  • ${customer?.name}: Rp${invoice.amount.toLocaleString('id-ID')} (${invoice.status})`
     );
   }
-
-  console.log('\n🔐 Login Credentials:');
-  console.log('  Email: budi@santoso.com');
-  console.log('  Password: 12345678');
-  console.log('  Email: siti@aminah.com');
-  console.log('  Password: 12345678');
 };
 
 main()

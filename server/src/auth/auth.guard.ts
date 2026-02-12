@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { HashService } from 'src/common/hash.service';
-import { IS_PUBLIC_KEY, ROLE_KEY } from './auth.metadata';
+import { IS_PUBLIC_KEY } from './auth.metadata';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -24,14 +24,8 @@ export class AuthGuard implements CanActivate {
       context.getClass(),
     ]);
     if (isPublic) {
-      // 💡 See this condition
       return true;
     }
-
-    const roles = this.reflector.getAllAndOverride<string[]>(ROLE_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
@@ -42,10 +36,6 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: HashService.getSecret(),
       });
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-
-      if (roles?.length && !roles?.includes(payload.role)) return false;
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();
