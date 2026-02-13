@@ -1,5 +1,5 @@
 "use client"
-
+import useAuth from "@/hooks/use-auth"
 import * as React from "react"
 import {
   AudioWaveform,
@@ -30,7 +30,7 @@ import {
 const data = {
   user: {
     name: "shadcn",
-    email: "m@example.com",
+    email: "emailname@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
@@ -157,6 +157,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { getToken } = useAuth()
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

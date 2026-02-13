@@ -69,11 +69,11 @@ export function LoginForm({
                 </Alert>
               )}
               <div className="grid gap-3">
-                <Label htmlFor="email">Username</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  type="Username"
-                  placeholder="username"
+                  type="email"
+                  placeholder="m@example.com"
                   value={body.username}
                   onChange={(e) =>
                     setBody({ ...body, username: e.target.value })

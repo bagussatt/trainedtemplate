@@ -1,5 +1,6 @@
 "use client"
-
+import useAuth from "@/hooks/use-auth"
+import { useEffect, useState } from "react"
 import {
   BadgeCheck,
   Bell,
@@ -28,7 +29,8 @@ import {
 import { useRouter } from "next/navigation"
 
 export function NavUser({
-  user,
+  //user,
+  user: initialUser,
 }: {
   user: {
     name: string
@@ -38,12 +40,40 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const router = useRouter()
+  const { fetcher, logout } = useAuth()
+  const [currentUser, setCurrentUser] = useState(initialUser)
 
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const res = await fetcher().get("/auth/me") // Endpoint untuk ambil data diri
+        if (res.data) {
+          setCurrentUser({
+            name: res.data.name,
+            email: res.data.email,
+            avatar: res.data.avatar || "/avatars/shadcn.jpg",
+          })
+        }
+      } catch (err) {
+        console.error("Gagal ambil profil:", err)
+      }
+    }
+    getProfile()
+  }, [])
+
+  //const handleLogout = async () => {
+    //try {
+      // Perform logout logic here, e.g., clear user session, token, etc.
+      //localStorage.removeItem("token") // Assuming you store the token in localStorage
+      //router.push("/") // Redirect to login page after logout
+    //} catch (error) {
+      //console.error("Logout error:", error)
+    //}
+  //}
   const handleLogout = async () => {
     try {
-      // Perform logout logic here, e.g., clear user session, token, etc.
-      localStorage.removeItem("token") // Assuming you store the token in localStorage
-      router.push("/") // Redirect to login page after logout
+      localStorage.removeItem("token")
+      router.push("/")
     } catch (error) {
       console.error("Logout error:", error)
     }
@@ -59,12 +89,12 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{currentUser.name}</span>
+                <span className="truncate text-xs">{currentUser.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -78,12 +108,12 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{currentUser.name}</span>
+                  <span className="truncate text-xs">{currentUser.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

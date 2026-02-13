@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
@@ -7,18 +7,20 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { LoggingModule } from './logging/logging.module';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaService } from './common/prisma.service';
+import { HashService } from './common/hash.service';
 
 @Module({
   imports: [
     ...(process.env.NODE_ENV === 'production'
       ? [
-          ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'public'),
-          }),
-        ]
+        ServeStaticModule.forRoot({
+          rootPath: join(__dirname, '..', 'public'),
+        }),
+      ]
       : []),
     AuthModule,
-       ConfigModule.forRoot({
+    ConfigModule.forRoot({
       isGlobal: true,
     }),
     CommonModule,
@@ -29,4 +31,28 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly hash: HashService
+  ) {
+
+  }
+  async onModuleInit() {
+//  const user = await  this.prisma.user.create(
+//       {
+
+//         data: {
+//           email: "admin@domain.com",
+//           name: "nama",
+//           password: await this.hash.hashPassword("password")
+//         }
+
+//       }
+//     )
+
+
+//     console.log(user)
+  }
+}

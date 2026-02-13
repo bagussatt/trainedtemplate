@@ -20,17 +20,19 @@ const useAuth = () => {
     localStorage.removeItem("token")
   }
 
-  const login = async (username: string, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(
-        `/auth/login`,
+        "http://localhost:3000/api/auth/login",
+        //`/auth/login`,
+        //`${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
         {
-          username,
-          password,
-        },
-        {
-          baseURL: baseUrl,
-        }
+          email: email,
+          password: password,
+        } //,
+        //{
+          //baseURL: baseUrl,
+        //}
       )
       if (response.data?.access_token) {
         saveToken(response.data?.access_token)
@@ -47,7 +49,7 @@ const useAuth = () => {
   const fetcher = () => {
     const token = getToken() || ""
     return axios.create({
-      baseURL: baseUrl,
+      baseURL: "http://localhost:3000/api",
       headers: {
         Authorization: `Bearer ${token}`,
       },
