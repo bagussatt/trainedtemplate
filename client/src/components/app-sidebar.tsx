@@ -132,7 +132,7 @@ const data = {
         },
         {
           title: "Limits",
-          url: "/dashboard/settingslimits",
+          url: "/dashboard/settings/limits",
         },
       ],
     },
@@ -145,7 +145,7 @@ const data = {
     },
     {
       name: "Sales & Marketing",
-      url: "/dashboard/projects/seles",
+      url: "/dashboard/projects/sales",
       icon: PieChart,
     },
     {
@@ -153,6 +153,7 @@ const data = {
       url: "/dashboard/projects/travel",
       icon: Map,
     },
+    //more
   ],
 }
 
