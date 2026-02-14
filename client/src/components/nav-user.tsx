@@ -47,9 +47,10 @@ export function NavUser({
     const getProfile = async () => {
       try {
         const res = await fetcher().get("/auth/me") // Endpoint untuk ambil data diri
+        console.log("Data dari DB:", res.data)
         if (res.data) {
           setCurrentUser({
-            name: res.data.name,
+            name: res.data.name || res.data.email.split('@')[0],
             email: res.data.email,
             avatar: res.data.avatar || "/avatars/shadcn.jpg",
           })
@@ -90,7 +91,7 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
-                <AvatarFallback className="rounded-lg">{}{currentUser.name ? currentUser.name.charAt(0).toUpperCase() : currentUser.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">{currentUser.name ? currentUser.name.charAt(0).toUpperCase() : currentUser.email?.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{currentUser.name}</span>
@@ -109,7 +110,7 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
-                  <AvatarFallback className="rounded-lg">{}{currentUser.name ? currentUser.name.charAt(0).toUpperCase() : currentUser.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">{currentUser.name ? currentUser.name.charAt(0).toUpperCase() : currentUser.email?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{currentUser.name}</span>
